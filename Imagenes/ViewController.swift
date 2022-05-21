@@ -57,13 +57,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate & UINavi
         }
         else {
             ipc.sourceType = .photoLibrary
+            self.present(ipc, animated: true,  completion: nil)
         }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         print ("seleccionó")
         if let imagen = info[.editedImage] as? UIImage {
-            ivFoto.image = imagen
+            // Cambiar la resolución de la imagen
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: 100, height: 100), true, 0.75)
+            imagen.draw(in: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
+            let nuevaImagen = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            ivFoto.image = nuevaImagen
             if picker.sourceType == .camera {
                 // para guardar la foto a la galería
                 // Se requiere la llave Privacy - Photo Library Usage Description en el archivo info.plist
